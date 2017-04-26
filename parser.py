@@ -1,6 +1,7 @@
 from display import *
 from matrix import *
 from draw import *
+from copy import *
 
 """
 Goes through the file named filename and performs all of the actions listed in that file.
@@ -55,7 +56,8 @@ def parse_file( fname, edges, polygons, transform, screen, color ):
     step = 0.1
     c = 0
 
-    mat = ident(new_matrix())
+    mat = new_matrix()
+    ident(mat)
     stack = [mat]
     i = 0
     
@@ -69,7 +71,7 @@ def parse_file( fname, edges, polygons, transform, screen, color ):
             #print 'args\t' + str(args)
 
         if line == 'push':
-            stack.append(stack[i])
+            stack.append(deepcopy(stack[i]))
             i+=1
 
         elif line == 'pop':
@@ -138,12 +140,14 @@ def parse_file( fname, edges, polygons, transform, screen, color ):
         elif line == 'scale':
             #print 'SCALE\t' + str(args)
             t = make_scale(float(args[0]), float(args[1]), float(args[2]))
-            matrix_mult(t, stack[i])
-
+            matrix_mult(stack[i],t)
+            stack[i] = t
+            
         elif line == 'move':
             #print 'MOVE\t' + str(args)
             t = make_translate(float(args[0]), float(args[1]), float(args[2]))
-            matrix_mult(t, stack[i])
+            matrix_mult(stack[i],t)
+            stack[i] = t
 
         elif line == 'rotate':
             #print 'ROTATE\t' + str(args)
@@ -155,7 +159,8 @@ def parse_file( fname, edges, polygons, transform, screen, color ):
                 t = make_rotY(theta)
             else:
                 t = make_rotZ(theta)
-            matrix_mult(t, stack[i])
+            matrix_mult(stack[i],t)
+            stack[i] = t
             
         elif line == 'display':
             display(screen)
