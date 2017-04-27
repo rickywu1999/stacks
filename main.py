@@ -15,4 +15,4 @@ transform = new_matrix()
 # print_matrix( make_hermite() )
 # print
 
-parse_file( 'script', edges, polygons, transform, screen, color )
+parse_file( 'script2', edges, polygons, transform, screen, color )
